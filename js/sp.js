@@ -3,54 +3,57 @@
 function labcode(data, x_var, y_var, sp_svg, tooltip) {
 
   //Task 5.1.1  -- Create the x-axis
-  var x = d3.scaleLinear();
-  x
+  var x = d3
+    .scaleLinear()
     .domain([
-      d3.min(data, function (d) { return +d.x_var; }),
-      d3.max(data, function (d) { return +d.x_var; })
+      d3.min(data, function (d) { return +d[x_var]; }),
+      d3.max(data, function (d) { return +d[x_var]; })
     ])
     .range([0, width]);
 
-
   //Task 5.1.2  -- Append the axes to the svg
-  var xAxis = d3.axisBottom(x);
-  sp_svg
+  var xAxis = sp_svg
     .append('g')
     .attr("width", width)
-    .call(xAxis);
+    .call(d3.axisBottom(x));
 
   //Task 5.1.3  -- Create y-axis
-  var y = d3.scaleLinear();
-  y
+  var y = d3
+    .scaleLinear()
     .domain([
-      d3.min(data, function (d) { return +d.y_var; }),
-      d3.max(data, function (d) { return +d.y_var; })
+      d3.min(data, function (d) { return +d[y_var]; }),
+      d3.max(data, function (d) { return +d[y_var]; })
     ])
     .range([0, height]);
 
   // Task 5.1.4 -- Append the axis to svg
-  var yAxis = d3.axisLeft(y);
-  sp_svg
+  var yAxis = sp_svg
     .append('g')
     .attr("height", height)
-    .call(yAxis);
+    .call(d3.axisLeft(y));
 
   // Task 5.1.5 -- Append circles to svg
-  var myCircles = sp_svg.append('g');
-  // myCircles
-  //   .selectAll('circle')
-  //   .data(data)
-  //   .enter()
-  //   .append("circle")
+  var myCircles = sp_svg
+    .append("g")
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle");
 
-  //   // Task 5.1.6 -- Add attributes to the circles
-  //   .attr("cx", function (d) { return x(+d.x_var); })
-  //   .attr("cy", function (d) { return y(+d.y_var); })
-  //   .attr("r", 6)
-  //   .style("fill", "darkturquoise")
-  //   .style("opacity", '0.3');
+  // Task 5.1.6 -- Add attributes to the circles
+  myCircles
+    .attr("cx", function (d) {
+      return x(d[x_var]);
+    })
+    .attr("cy", function (d) {
+      return y(d[y_var]);
+    })
+    .attr("r", 6)
+    .style("fill", "darkturquoise")
+    .style("opacity", "0.3");
+
   // Task 5.1.7 -- Adding hovering
-
+  hovering(myCircles, tooltip);
 
   return [x, xAxis, y, yAxis, myCircles];
 }
