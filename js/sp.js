@@ -42,12 +42,8 @@ function labcode(data, x_var, y_var, sp_svg, tooltip) {
 
   // Task 5.1.6 -- Add attributes to the circles
   myCircles
-    .attr("cx", function (d) {
-      return x(d[x_var]);
-    })
-    .attr("cy", function (d) {
-      return y(d[y_var]);
-    })
+    .attr("cx", function (d) { return x(d[x_var]); })
+    .attr("cy", function (d) { return y(d[y_var]); })
     .attr("r", 6)
     .style("fill", "darkturquoise")
     .style("opacity", "0.3");

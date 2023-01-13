@@ -52,20 +52,50 @@ function pc(data) {
 	extents = dimensions.map(function (p) { return [0, 0]; });
 
 	// Task 5.2.1 -- Drawing the Lines
-	var foreground
+	var foreground = pc_svg.append("g")
+		.attr("class", "foreground")
+		.selectAll("path")
+		.data(data)
+		.enter()
+		.append("path")
+		.attr("d", drawPath);
 
 	// Task 5.2.2 -- Drawing Axes
-	var axes
+	var axes = pc_svg
+		.selectAll("dimention")
+		.data(dimensions)
+		.enter()
+		.append("g")
+		.attr("class", "dimention axis")
+		.attr("transform", function (d) { return "translate(" + x(d) + ")"; })
+		.each(function (d) { return d3.select(this).call(yAxis.scale(y[d])); });
 
-	
 	// 5.2.3 -- Appending Axes Titles
-
+	axes
+		.append("text")
+		.attr("text-anchor", "middle")
+		.attr("y", -9)
+		.style("fill", "black")
+		.text(function (d) { return d; });
 
 	// 5.2.4 -- Brushing the axes
+	axes
+		.append("g")
+		.attr("class", "brush")
+		.each(function (d) { d3.select(this).call(perAxisBrush(d)); })
+		.selectAll("rect")
+		.attr("x", -8)
+		.attr("width", 10);
 
-	
 	// 5.2.5 -- Dragging the Axes
-
+	axes.call(
+		d3
+			.drag()
+			.subject(function (d) { return { x: x(d) }; })
+			.on("start", startDrag)
+			.on("drag", drag)
+			.on("end", endDrag)
+	);
 
 	/** Computer Exercise ends here  */
 
@@ -143,25 +173,25 @@ function pc(data) {
 		}));
 	}
 
-	this.selectLine = function (value){
+	this.selectLine = function (value) {
 		d3.select(".foreground").selectAll('path')
-		.style("stroke", function (d){
-			return d.ProductName == value ? "deeppink" : 'darkturquoise';
-		})
-		.style("stroke-width", function (d){
-			return d.ProductName == value ? "3.0" : '0.3';
-		})
-		.style("opacity", function (d){
-			return d.ProductName == value ? "1.0" : '0.3';
-		})
+			.style("stroke", function (d) {
+				return d.ProductName == value ? "deeppink" : 'darkturquoise';
+			})
+			.style("stroke-width", function (d) {
+				return d.ProductName == value ? "3.0" : '0.3';
+			})
+			.style("opacity", function (d) {
+				return d.ProductName == value ? "1.0" : '0.3';
+			})
 	}
 
-	this.resetSelectLine = function (){
+	this.resetSelectLine = function () {
 		var l = d3.select(".foreground");
 		l.selectAll("path")
-		.style("stroke", "darkturquoise")
-		.style("stroke-width", '0.4px')
-		.style("opacity", '1.0')
+			.style("stroke", "darkturquoise")
+			.style("stroke-width", '0.4px')
+			.style("opacity", '1.0')
 	}
 
 	function position(d) {
