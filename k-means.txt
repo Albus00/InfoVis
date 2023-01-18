@@ -1,0 +1,12 @@
+Create K number of objects, with x y and z coordinates;
+
+Generate coordinates and assign to the objects, that are now points in space, or cluster centroids;
+
+Loop trough all the items in space and use equation (1) to assign them to the closest centroid;
+
+Loop through all the centroids and divide their coordinates with K, the number of centroids.
+  Use a while loop 
+    In the same loop we add another loop to square the distance within each cluster, equation (2). 
+    Check the sum after every operation and once it is below a threshold, break the while loop (or 
+    loop trough 4 times max);
+
